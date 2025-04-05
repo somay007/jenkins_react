@@ -28,12 +28,12 @@ pipeline {
      }
 
         stage('Build') {
-          dir(demo){
             steps {
-                bat 'npm install'
-                bat 'npm run build'
-            }
-          }
+                     dir(demo){
+                        bat 'npm install'
+                        bat 'npm run build'
+                    }
+               }
         }
 
         stage('Deploy') {
