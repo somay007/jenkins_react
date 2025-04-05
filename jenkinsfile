@@ -5,8 +5,7 @@ pipeline {
         AZURE_CREDENTIALS_ID = 'azure-service-principal'
         RESOURCE_GROUP = 'rg-jenkins'
         APP_SERVICE_NAME = 'webapijenkins10101010'
-        TERRAFORM_PATH = '"C:\\Users\\hp\\Downloads\\terraform_1.11.3_windows_386\\terraform.exe"'
-        NODE_PATH='"C:\\Program Files\\nodejs\\node.exe"'  
+        TERRAFORM_PATH = '"C:\\Users\\hp\\Downloads\\terraform_1.11.3_windows_386\\terraform.exe"'  
     }
 
     stages {
@@ -29,10 +28,12 @@ pipeline {
      }
 
         stage('Build') {
+          dir(demo){
             steps {
-                bat '"%NODE_PATH%" npm install'
-                bat '"%NODE_PATH%" npm run build'
+                bat 'npm install'
+                bat 'npm run build'
             }
+          }
         }
 
         stage('Deploy') {
