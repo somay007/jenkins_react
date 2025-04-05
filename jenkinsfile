@@ -6,7 +6,7 @@ pipeline {
         RESOURCE_GROUP = 'rg-jenkins'
         APP_SERVICE_NAME = 'webapijenkins10101010'
         TERRAFORM_PATH = '"C:\\Users\\hp\\Downloads\\terraform_1.11.3_windows_386\\terraform.exe"'
-        NODE_PATH='"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Node.js"'
+        NODE_PATH='"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Node.js"'
     }
 
     stages {
