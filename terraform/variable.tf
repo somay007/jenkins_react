@@ -52,11 +52,7 @@ variable "auth_enabled" {
   default     = true
 }
 
-variable "node_version" {
-  description = "Node.js version for the app"
-  type        = string
-  default     = "22-lts"
-}
+
 
 
 
