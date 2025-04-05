@@ -26,7 +26,7 @@ resource "azurerm_windows_web_app" "serviceApp" {
   resource_group_name = azurerm_resource_group.rgasp.name
   site_config {
     application_stack {
-      node_version = "22-lts"
+      node_version = "~22"
     }
   }
 }
