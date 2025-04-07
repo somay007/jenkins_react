@@ -8,44 +8,23 @@ pipeline {
         TERRAFORM_PATH = '"C:\\Users\\hp\\Downloads\\terraform_1.11.3_windows_386\\terraform.exe"'  
     }
 
+
+
     stages {
         stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/somay007/jenkins_react.git'
             }
         }
-      stage('Terraform Init') {
-           steps {
-                bat '"%TERRAFORM_PATH%" -chdir=terraform init '
-          }
+stage('Debug') {
+    steps {
+        bat 'dir'
     }
-      stage('Terraform Plan & Apply') {
-           steps {
-               
-               bat '"%TERRAFORM_PATH%" -chdir=terraform plan -out=tfplan'
-               bat '"%TERRAFORM_PATH%" -chdir=terraform apply -auto-approve tfplan'
-           }
-     }
+}
 
-        stage('Build') {
-            steps {
-                     dir(demo){
-                        bat 'npm install'
-                        bat 'npm run build'
-                    }
-               }
-        }
+      
 
-        stage('Deploy') {
-            steps {
-                withCredentials([azureServicePrincipal(credentialsId: AZURE_CREDENTIALS_ID)]) {
-                    bat "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
-                    bat "powershell Compress-Archive -Path ./build/* -DestinationPath ./build.zip -Force"
-                    bat "az webapp deploy --resource-group $RESOURCE_GROUP --name $APP_SERVICE_NAME --src-path ./publish.zip --type zip"
-                }
-            }
-        }
-    }
+       
 
     post {
         success {
