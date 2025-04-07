@@ -65,7 +65,9 @@ stage('Create web.config') {
 
 stage('building'){
     steps{
+        dir('demo'){
          bat "powershell Compress-Archive -Path ./build/* -DestinationPath ./build.zip -Force"
+        }
     }
 }
 
