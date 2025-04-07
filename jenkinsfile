@@ -3,7 +3,7 @@ pipeline {
     agent any
     environment {
         AZURE_CREDENTIALS_ID = 'azure-service-principal'
-        RESOURCE_GROUP = 'rg-jenkins'
+        RESOURCE_GROUP = 'rg-jenkins-react'
         APP_SERVICE_NAME = 'webapijenkins10101010'
         TERRAFORM_PATH = '"C:\\Users\\hp\\Downloads\\terraform_1.11.3_windows_386\\terraform.exe"'  
     }
