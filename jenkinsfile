@@ -63,13 +63,14 @@ stage('Create web.config') {
             }
         }
 
-stage('building'){
-    steps{
-        dir('demo'){
-         bat "powershell Compress-Archive -Path ./build/* -DestinationPath ./build.zip -Force"
+stage('Archive Build') {
+    steps {
+        dir('demo/build') {
+            bat 'powershell Compress-Archive -Path * -DestinationPath ../build.zip -Force'
         }
     }
 }
+
 
         stage('Deploy to Azure') {
     steps {
