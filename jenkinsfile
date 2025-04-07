@@ -29,7 +29,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                     dir(demo){
+                     dir('demo'){
                         bat 'npm install'
                         bat 'npm run build'
                     }
