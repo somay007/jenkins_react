@@ -12,7 +12,7 @@ variable "location" {
 variable "resource_group_name" {
   description = "resource group name"
   type = string
-  default = "rg-jenkins"
+  default = "rg-jenkins-react"
 }
 
 variable "os" {
@@ -24,7 +24,7 @@ variable "os" {
 variable "service_plan_name" {
   description = "Name of the service plan"
   type = string
-  default = "appserviceplanSomay"
+  default = "appserviceplanSomay1"
 }
 
 
