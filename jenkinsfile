@@ -42,6 +42,8 @@ pipeline {
                     bat 'xcopy build ..\\publish /E /I'
                 }
             bat "powershell Compress-Archive -Path ./build/* -DestinationPath ./build.zip -Force"
+        }
+    }
         stage('Deploy') {
             steps {
                 withCredentials([azureServicePrincipal(credentialsId: AZURE_CREDENTIALS_ID)]) {
