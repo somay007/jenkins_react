@@ -35,15 +35,13 @@ pipeline {
                     }
                }
         }
-        stage('Prepare for Deployment'){
-            steps{
-                dir('demo'){
-                    bat 'mkdir ..\\publish'
-                    bat 'xcopy build ..\\publish /E /I'
-                }
-            bat "powershell Compress-Archive -Path * -DestinationPath ./publish.zip -Force"
+        stage('Zip Build Folder') {
+              steps {
+                dir('demo\build') {
+                      bat 'powershell Compress-Archive -Path * -DestinationPath ..\\build.zip -Force'
+                    }
+              }
         }
-    }
         stage('Deploy') {
             steps {
                 withCredentials([azureServicePrincipal(credentialsId: AZURE_CREDENTIALS_ID)]) {
@@ -52,6 +50,18 @@ pipeline {
                 }
             }
         }
+    }
+stage('Deploy to Azure App Service') {
+      steps {
+        dir('demo') {
+          bat """
+            az webapp deployment source config-zip ^
+              --resource-group $RESOURCE_GROUP ^
+              --name  $APP_SERVICE_NAME ^
+              --src build.zip
+          """
+        }
+      }
     }
 
     post {
