@@ -1,12 +1,14 @@
-
 pipeline {
-    agent any
-    environment {
-        AZURE_CREDENTIALS_ID = 'azure-service-principal'
-        RESOURCE_GROUP = 'rg-jenkins-react'
-        APP_SERVICE_NAME = 'webapijenkins10101010'
-        TERRAFORM_PATH = '"C:\\Users\\hp\\Downloads\\terraform_1.11.3_windows_386\\terraform.exe"'  
-    }
+  agent any
+
+  environment {
+    REACT_APP_DIR = 'demo'
+    AZURE_WEBAPP_NAME = 'react-app-service'
+    AZURE_RG = 'rg-jenkins-react'
+    AZURE_PLAN = 'webapijenkins10101010'
+    TERRAFORM_PATH = '"C:\\Users\\hp\\Downloads\\terraform_1.11.3_windows_386\\terraform.exe"'
+
+  }
 
     stages {
         stage('Checkout Code') {
@@ -14,6 +16,25 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/somay007/jenkins_react.git'
             }
         }
+}
+
+  stages {
+    stage('Install Dependencies') {
+      steps {
+        dir("${REACT_APP_DIR}") {
+          bat 'npm install'
+        }
+      }
+    }
+
+    stage('Build React App') {
+      steps {
+        dir("${REACT_APP_DIR}") {
+          bat 'npm run build'
+        }
+      }
+    }
+
       stage('Terraform Init') {
            steps {
                 bat '"%TERRAFORM_PATH%" -chdir=terraform init '
@@ -27,72 +48,35 @@ pipeline {
            }
      }
 
-        stage('Build') {
-            steps {
-                     dir('demo'){
-                        bat 'npm install'
-                        bat 'npm run build'
-                    }
-               }
-        }
-stage('Create web.config') {
-            steps {
-                dir('demo/build') {
-                    writeFile file: 'web.config', text: '''<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <system.webServer>
-    <rewrite>
-      <rules>
-        <rule name="SPA" stopProcessing="true">
-          <match url=".*" />
-          <conditions logicalGrouping="MatchAll">
-            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
-          </conditions>
-          <action type="Rewrite" url="/" />
-        </rule>
-      </rules>
-    </rewrite>
-    <staticContent>
-      <mimeMap fileExtension=".json" mimeType="application/json" />
-    </staticContent>
-  </system.webServer>
-</configuration>
-'''
-                }
-            }
-        }
 
-stage('Archive Build') {
-    steps {
-        dir('demo/build') {
-            bat 'powershell Compress-Archive -Path * -DestinationPath ../build.zip -Force'
+    stage('Zip Build Folder') {
+      steps {
+        dir("${REACT_APP_DIR}\\build") {
+          bat 'powershell Compress-Archive -Path * -DestinationPath ..\\build.zip -Force'
         }
+      }
     }
-}
 
-
-        stage('Deploy to Azure') {
-    steps {
-        withCredentials([azureServicePrincipal(credentialsId: AZURE_CREDENTIALS_ID)]) {
-            bat "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
-        dir('demo'){
-            bat "az webapp deploy --resource-group $RESOURCE_GROUP --name $APP_SERVICE_NAME  --src-path ./build.zip --type zip"
+    stage('Deploy to Azure App Service') {
+      steps {
+        dir("${REACT_APP_DIR}") {
+          bat """
+            az webapp deployment source config-zip ^
+              --resource-group %AZURE_RG% ^
+              --name %AZURE_WEBAPP_NAME% ^
+              --src build.zip
+          """
         }
-        }
-
+      }
     }
-}
-}
+  }
 
-
-
-    post {
-        success {
-            echo 'Deployment Successful!'
-        }
-        failure {
-            echo 'Deployment Failed!'
-        }
+  post {
+    success {
+      echo "✅ Deployment completed successfully!"
     }
+    failure {
+      echo "❌ Something went wrong."
+    }
+  }
 }
