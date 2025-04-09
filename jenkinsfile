@@ -38,14 +38,14 @@ pipeline {
 
       stage('Terraform Init') {
            steps {
-                bat '"%TERRAFORM_PATH%" -chdir=terraform init '
+              //bat '"%TERRAFORM_PATH%" -chdir=terraform init '
           }
     }
       stage('Terraform Plan & Apply') {
            steps {
                
-               bat '"%TERRAFORM_PATH%" -chdir=terraform plan -out=tfplan'
-               bat '"%TERRAFORM_PATH%" -chdir=terraform apply -auto-approve tfplan'
+               //bat '"%TERRAFORM_PATH%" -chdir=terraform plan -out=tfplan'
+               //bat '"%TERRAFORM_PATH%" -chdir=terraform apply -auto-approve tfplan'
            }
      }
 
@@ -61,12 +61,7 @@ pipeline {
     stage('Deploy to Azure App Service') {
       steps {
         dir("${REACT_APP_DIR}") {
-          bat """
-            az webapp deployment source config-zip ^
-              --resource-group %AZURE_RG% ^
-              --name %AZURE_WEBAPP_NAME% ^
-              --src build.zip
-          """
+          bat " az webapp deploy source config-zip --resource-group %AZURE_RG%  --name %AZURE_WEBAPP_NAME%  --src build.zip"
         }
       }
     }
