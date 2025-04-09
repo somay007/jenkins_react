@@ -2,6 +2,7 @@ pipeline {
   agent any
 
   environment {
+    AZURE_CREDENTIALS_ID = 'azure-service-principal'
     REACT_APP_DIR = 'demo'
     AZURE_WEBAPP_NAME = 'react-app-service'
     AZURE_RG = 'rg-jenkins-react'
