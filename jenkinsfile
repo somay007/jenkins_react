@@ -39,15 +39,15 @@ pipeline {
 
       stage('Terraform Init') {
            steps {
-              echo "terraform"
-              //bat '"%TERRAFORM_PATH%" -chdir=terraform init '
+              
+              bat '"%TERRAFORM_PATH%" -chdir=terraform init '
           }
     }
       stage('Terraform Plan & Apply') {
            steps {
-               echo "plan"
-               //bat '"%TERRAFORM_PATH%" -chdir=terraform plan -out=tfplan'
-               //bat '"%TERRAFORM_PATH%" -chdir=terraform apply -auto-approve tfplan'
+               
+               bat '"%TERRAFORM_PATH%" -chdir=terraform plan -out=tfplan'
+               bat '"%TERRAFORM_PATH%" -chdir=terraform apply -auto-approve tfplan'
            }
      }
 
