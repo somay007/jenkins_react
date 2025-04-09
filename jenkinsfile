@@ -62,7 +62,7 @@ pipeline {
     stage('Deploy to Azure App Service') {
       steps {
         dir("${REACT_APP_DIR}") {
-          bat " az webapp deploy source config-zip --resource-group %AZURE_RG%  --name %AZURE_WEBAPP_NAME%  --src build.zip"
+          bat " az webapp deploy source config-zip --resource-group %AZURE_RG%  --name %AZURE_WEBAPP_NAME%  --src-path ./build.zip"
         }
       }
     }
